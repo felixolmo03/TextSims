@@ -1,0 +1,325 @@
+{
+  "memory_id": "memory_1",
+  "entry_scene": "m1_arrival",
+  "scenes": {
+    "m1_arrival": {
+      "context_summary": "arrival at the front door of the party house",
+      "narration": [
+        "April. Eight years old. A classmate's birthday party.",
+        "The front door is slightly ajar because kids keep running in and out. You are standing on the step with the gift in your hands. Your mother's car is already pulling away from the curb.",
+        "The host parent — the birthday boy's mom — sees you and smiles. She's warm but a little distracted. 'Oh, hi! Come in, come in. Just put your gift on the pile in the corner. Go find the birthday boy, he's around here somewhere.'",
+        "She turns back to a conversation with another parent in the kitchen. You are inside now. The living room is loud."
+      ],
+      "on_enter": [
+        { "event_type": "zone_entered", "data": { "zone_id": "living_room_entry", "entry_vector": null } }
+      ],
+      "choices": [
+        {
+          "option_id": "go_to_gifts_carefully",
+          "text": "Walk carefully to the gift pile and place your present where it will be seen.",
+          "semantic_tag": "engage",
+          "structural_tag": "extended",
+          "next_scene": "m1_gift_pile"
+        },
+        {
+          "option_id": "go_to_gifts_quickly",
+          "text": "Drop the gift on the pile and step away.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_gift_pile_quick"
+        },
+        {
+          "option_id": "hover_at_edge",
+          "text": "Stand near the doorway for a moment. Watch the room.",
+          "semantic_tag": "observe",
+          "structural_tag": "extended",
+          "next_scene": "m1_hover_observe"
+        }
+      ]
+    },
+
+    "m1_gift_pile": {
+      "context_summary": "at the gift pile, placing the present carefully",
+      "narration": [
+        "You kneel by the corner and set the gift down. There are already other presents there. Yours is smaller than most of them. You shift it slightly so it isn't hidden behind the bigger ones. You look at it for a second, then stand up.",
+        "The living room stretches out ahead of you. Kids on the rug, playing some game with cards. The birthday boy in the middle of them, laughing about something. A parent by the snack table. A short hallway leading somewhere off to the side."
+      ],
+      "on_enter": [
+        { "event_type": "zone_entered", "data": { "zone_id": "gift_pile_area", "entry_vector": null } },
+        { "event_type": "object_examined", "data": { "object_id": "gift_pile", "interaction_type": "looked_at", "duration_seconds": null } }
+      ],
+      "choices": [
+        {
+          "option_id": "approach_kids",
+          "text": "Walk toward the kids on the rug.",
+          "semantic_tag": "engage",
+          "structural_tag": "extended",
+          "next_scene": "m1_rug_approach"
+        },
+        {
+          "option_id": "check_bathroom",
+          "text": "Head down the hallway to find the bathroom.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_bathroom"
+        }
+      ]
+    },
+
+    "m1_gift_pile_quick": {
+      "context_summary": "dropped gift and stepped away",
+      "narration": [
+        "You put it on top of the pile without looking too closely at how it lands. You step back into the room.",
+        "Kids on the rug, playing some game. The birthday boy in the middle. A parent by the snack table. A hallway off to the side."
+      ],
+      "on_enter": [
+        { "event_type": "zone_entered", "data": { "zone_id": "gift_pile_area", "entry_vector": null } }
+      ],
+      "choices": [
+        {
+          "option_id": "approach_kids",
+          "text": "Walk toward the kids on the rug.",
+          "semantic_tag": "engage",
+          "structural_tag": "extended",
+          "next_scene": "m1_rug_approach"
+        },
+        {
+          "option_id": "check_bathroom",
+          "text": "Head down the hallway to find the bathroom.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_bathroom"
+        }
+      ]
+    },
+
+    "m1_hover_observe": {
+      "context_summary": "hovering at the edge of the room, watching",
+      "narration": [
+        "You stay by the entry. The room is loud in a way that makes it hard to know where to put yourself. You watch the kids on the rug. You watch the birthday boy. You watch the way the host parent moves through the room checking on things.",
+        "After a minute or so, you realize you're still holding the gift. Someone might notice you standing here."
+      ],
+      "on_enter": [
+        { "event_type": "zone_entered", "data": { "zone_id": "living_room_edge", "entry_vector": null } },
+        { "event_type": "stillness_triggered", "data": { "trigger_context": "being_seen", "duration_seconds": 2.5, "observed_by_npc": false } }
+      ],
+      "choices": [
+        {
+          "option_id": "go_place_gift",
+          "text": "Move — put the gift on the pile.",
+          "semantic_tag": "engage",
+          "structural_tag": "terminal",
+          "next_scene": "m1_gift_pile_quick"
+        }
+      ]
+    },
+
+    "m1_bathroom": {
+      "context_summary": "in the small hallway bathroom",
+      "narration": [
+        "The bathroom is small and quiet. You close the door behind you. You don't actually need to use it. You just stand for a moment. The noise of the party is muffled through the door.",
+        "You look at yourself in the mirror. You look like a kid at a party. You look like you're fine."
+      ],
+      "on_enter": [
+        { "event_type": "zone_entered", "data": { "zone_id": "bathroom", "entry_vector": null } },
+        { "event_type": "stillness_triggered", "data": { "trigger_context": "overwhelmed", "duration_seconds": 3.0, "observed_by_npc": false } }
+      ],
+      "choices": [
+        {
+          "option_id": "leave_bathroom_soon",
+          "text": "Wash your hands quickly and go back out.",
+          "semantic_tag": "engage",
+          "structural_tag": "terminal",
+          "next_scene": "m1_rug_approach"
+        },
+        {
+          "option_id": "stay_longer",
+          "text": "Stay a little longer.",
+          "semantic_tag": "avoid",
+          "structural_tag": "extended",
+          "next_scene": "m1_bathroom_extended"
+        }
+      ]
+    },
+
+    "m1_bathroom_extended": {
+      "context_summary": "lingering in the bathroom",
+      "narration": [
+        "You sit down on the edge of the tub. The tile is cold through your pants. You count the small hexagonal tiles on the floor. Twenty-three from one corner to the other, not counting the half-tiles at the edge.",
+        "You know you have to go back out eventually."
+      ],
+      "on_enter": [
+        { "event_type": "stillness_triggered", "data": { "trigger_context": "overwhelmed", "duration_seconds": 4.0, "observed_by_npc": false } }
+      ],
+      "choices": [
+        {
+          "option_id": "go_out_now",
+          "text": "Stand up. Go back out to the party.",
+          "semantic_tag": "engage",
+          "structural_tag": "terminal",
+          "next_scene": "m1_rug_approach"
+        }
+      ]
+    },
+
+    "m1_rug_approach": {
+      "context_summary": "approaching the group of kids on the rug",
+      "narration": [
+        "The kids on the rug look up as you get closer. Four of them, plus the birthday boy. They're in the middle of a card game — some kind of matching thing you don't recognize. The birthday boy waves you over with a card in his hand.",
+        "'You want to play? It's easy.' One of the other kids scoots to make room.",
+        "You look at the cards laid out on the rug. You don't know how this game works."
+      ],
+      "on_enter": [
+        { "event_type": "zone_entered", "data": { "zone_id": "rug_area", "entry_vector": null } },
+        { "event_type": "npc_interaction", "data": { "npc_id": "birthday_boy", "interaction_type": "approached", "duration_seconds": null } },
+        { "event_type": "choice_presented", "data": { "scene_id": "m1_rug_approach", "context_summary": "asked if he wants to play the card game", "available_options": [] } }
+      ],
+      "choices": [
+        {
+          "option_id": "admit",
+          "text": "'I don't know how to play.'",
+          "semantic_tag": "honest",
+          "structural_tag": "terminal",
+          "next_scene": "m1_game_admit",
+          "on_select": [
+            { "event_type": "stillness_triggered", "data": { "trigger_context": "being_seen", "duration_seconds": 2.0, "observed_by_npc": true } }
+          ]
+        },
+        {
+          "option_id": "bluff",
+          "text": "'Yeah, sure.' Sit down and figure it out as you go.",
+          "semantic_tag": "deflecting",
+          "structural_tag": "extended",
+          "next_scene": "m1_game_bluff"
+        },
+        {
+          "option_id": "retreat",
+          "text": "Shake your head. Step back.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_game_retreat",
+          "on_select": [
+            { "event_type": "stillness_triggered", "data": { "trigger_context": "overwhelmed", "duration_seconds": 2.5, "observed_by_npc": false } }
+          ]
+        }
+      ]
+    },
+
+    "m1_game_admit": {
+      "context_summary": "admitted not knowing the game",
+      "narration": [
+        "One of the kids explains the rules to you, a little impatiently. Match the pairs. Whoever gets the most pairs by the end wins. It's not complicated. You just hadn't seen these cards before.",
+        "You play a round. You match one pair. Someone else matches three in a row. The game moves on. Nobody is mean about it. Nobody has to be. It's just clear, to you, that everyone else is somewhere you aren't."
+      ],
+      "on_enter": [
+        { "event_type": "npc_interaction", "data": { "npc_id": "kid_group", "interaction_type": "dialogue_engaged", "duration_seconds": null } }
+      ],
+      "choices": [
+        {
+          "option_id": "stay_in_group",
+          "text": "Stay with the group. Keep playing.",
+          "semantic_tag": "engage",
+          "structural_tag": "extended",
+          "next_scene": "m1_photo_setup"
+        },
+        {
+          "option_id": "leave_group",
+          "text": "Get up when there's a natural break. Wander off.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_photo_setup"
+        }
+      ]
+    },
+
+    "m1_game_bluff": {
+      "context_summary": "bluffed and played the game without knowing rules",
+      "narration": [
+        "You sit down. You watch what the other kids do and try to copy it, half a beat behind. It works for one round. Then it doesn't. Someone laughs — not meanly, just surprised. 'Wait, you don't know how to play?'",
+        "You feel your face get hot. Someone explains the rules. You play a few more rounds. You match some pairs. The game moves on."
+      ],
+      "on_enter": [
+        { "event_type": "npc_interaction", "data": { "npc_id": "kid_group", "interaction_type": "dialogue_engaged", "duration_seconds": null } },
+        { "event_type": "stillness_triggered", "data": { "trigger_context": "being_seen", "duration_seconds": 2.5, "observed_by_npc": true } }
+      ],
+      "choices": [
+        {
+          "option_id": "stay_in_group",
+          "text": "Stay with the group. Keep playing.",
+          "semantic_tag": "engage",
+          "structural_tag": "extended",
+          "next_scene": "m1_photo_setup"
+        },
+        {
+          "option_id": "leave_group",
+          "text": "Get up when there's a natural break. Wander off.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_photo_setup"
+        }
+      ]
+    },
+
+    "m1_game_retreat": {
+      "context_summary": "retreated from the game",
+      "narration": [
+        "You step back from the rug. The birthday boy shrugs and turns back to his cards. The other kids don't seem to notice.",
+        "You end up over by the snack table. There's another kid there — a girl you don't know — who is also standing quietly by herself. Neither of you says anything to the other. After a minute, she wanders off."
+      ],
+      "choices": [
+        {
+          "option_id": "wait_it_out",
+          "text": "Stay where you are. The party will end eventually.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_photo_setup"
+        }
+      ]
+    },
+
+    "m1_photo_setup": {
+      "context_summary": "the host parent is gathering everyone for a group photo",
+      "narration": [
+        "The party is winding down. Some parents are starting to arrive at the door. The host parent claps her hands to get everyone's attention.",
+        "'Everyone! Group picture with the birthday boy! Come on, everyone squeeze in!'",
+        "Kids start moving toward the fireplace where she's set up her camera. The birthday boy is in the middle. There's a scramble for who stands next to him. You are near the back of the room."
+      ],
+      "choices": [
+        {
+          "option_id": "photo_center",
+          "text": "Move to the center. Stand next to the birthday boy.",
+          "semantic_tag": "engage",
+          "structural_tag": "terminal",
+          "next_scene": "m1_photo_taken"
+        },
+        {
+          "option_id": "photo_side",
+          "text": "Stand near the side of the group. Somewhere in the second row.",
+          "semantic_tag": "observe",
+          "structural_tag": "terminal",
+          "next_scene": "m1_photo_taken"
+        },
+        {
+          "option_id": "photo_edge",
+          "text": "Stand at the far edge. Half in the frame.",
+          "semantic_tag": "avoid",
+          "structural_tag": "terminal",
+          "next_scene": "m1_photo_taken"
+        }
+      ]
+    },
+
+    "m1_photo_taken": {
+      "context_summary": "the photo is taken; end of memory",
+      "narration": [
+        "The camera flashes. The photo is taken. The kids start scattering. The host parent puts the camera down and heads toward the door where more parents are arriving.",
+        "You look at your feet.",
+        "He told her it was fine."
+      ],
+      "on_enter": [
+        { "event_type": "object_examined", "data": { "object_id": "group_photo", "interaction_type": "photographed", "duration_seconds": null } }
+      ],
+      "terminal": true
+    }
+  }
+}
