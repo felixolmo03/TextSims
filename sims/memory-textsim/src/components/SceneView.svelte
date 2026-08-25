@@ -1,16 +1,17 @@
 <script>
   export let scene;
-  export let onChoice;
+  export let narration = [];
+  export let onChoice = null;
+  export let onContinue = null;
+  export let isTerminal = false;
 
-  $: hasChoices = scene.choices && scene.choices.length > 0;
+  $: hasChoices = !isTerminal && scene.choices && scene.choices.length > 0;
 </script>
 
 <article class="scene">
-  {#if scene.narration}
-    {#each scene.narration as paragraph}
-      <p>{paragraph}</p>
-    {/each}
-  {/if}
+  {#each narration as paragraph}
+    <p>{paragraph}</p>
+  {/each}
 
   {#if hasChoices}
     <div class="choices">
@@ -19,6 +20,10 @@
           {choice.text}
         </button>
       {/each}
+    </div>
+  {:else if isTerminal}
+    <div class="continue">
+      <button on:click={onContinue}>Continue</button>
     </div>
   {/if}
 </article>
@@ -42,6 +47,10 @@
     flex-direction: column;
     gap: 0.75rem;
   }
+  .continue {
+    margin-top: 3rem;
+    text-align: center;
+  }
   button {
     background: transparent;
     color: #c8c6c0;
@@ -53,6 +62,11 @@
     cursor: pointer;
     transition: all 0.2s;
     line-height: 1.5;
+  }
+  .continue button {
+    text-align: center;
+    padding: 0.75rem 2.5rem;
+    letter-spacing: 0.05em;
   }
   button:hover {
     border-color: #888;

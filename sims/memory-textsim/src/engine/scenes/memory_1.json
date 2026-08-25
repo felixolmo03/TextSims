@@ -7,7 +7,7 @@
       "narration": [
         "April. Eight years old. A classmate's birthday party.",
         "The front door is slightly ajar because kids keep running in and out. You are standing on the step with the gift in your hands. Your mother's car is already pulling away from the curb.",
-        "The host parent — the birthday boy's mom — sees you and smiles. She's warm but a little distracted. 'Oh, hi! Come in, come in. Just put your gift on the pile in the corner. Go find the birthday boy, he's around here somewhere.'",
+        "The host parent sees you and smiles. She's warm but a little distracted. 'Oh, hi! Come in, come in. Just put your gift on the pile in the corner. Go find the birthday boy, he's around here somewhere.'",
         "She turns back to a conversation with another parent in the kitchen. You are inside now. The living room is loud."
       ],
       "on_enter": [
@@ -16,21 +16,21 @@
       "choices": [
         {
           "option_id": "go_to_gifts_carefully",
-          "text": "Walk carefully to the gift pile and place your present where it will be seen.",
+          "text": "Walk to the gift pile and place your present where it will be seen.",
           "semantic_tag": "engage",
           "structural_tag": "extended",
           "next_scene": "m1_gift_pile"
         },
         {
           "option_id": "go_to_gifts_quickly",
-          "text": "Drop the gift on the pile and step away.",
+          "text": "Place the gift in the nearest open space and step away.",
           "semantic_tag": "avoid",
           "structural_tag": "terminal",
           "next_scene": "m1_gift_pile_quick"
         },
         {
           "option_id": "hover_at_edge",
-          "text": "Stand near the doorway for a moment. Watch the room.",
+          "text": "Stand near the doorway for a moment watching the other kids then go place your gift.",
           "semantic_tag": "observe",
           "structural_tag": "extended",
           "next_scene": "m1_hover_observe"
@@ -58,7 +58,7 @@
         },
         {
           "option_id": "check_bathroom",
-          "text": "Head down the hallway to find the bathroom.",
+          "text": "Linger around the kids while making your way to the hallway.",
           "semantic_tag": "avoid",
           "structural_tag": "terminal",
           "next_scene": "m1_bathroom"
@@ -96,7 +96,7 @@
     "m1_hover_observe": {
       "context_summary": "hovering at the edge of the room, watching",
       "narration": [
-        "You stay by the entry. The room is loud in a way that makes it hard to know where to put yourself. You watch the kids on the rug. You watch the birthday boy. You watch the way the host parent moves through the room checking on things.",
+        "You stay by the entry. The room is loud in a way that makes it hard to know where to put yourself. You watch the kids on the rug. You watch the birthday boy. You watch the host parent moving through the room checking on things.",
         "After a minute or so, you realize you're still holding the gift. Someone might notice you standing here."
       ],
       "on_enter": [
@@ -106,7 +106,7 @@
       "choices": [
         {
           "option_id": "go_place_gift",
-          "text": "Move — put the gift on the pile.",
+          "text": "Move, put the gift on the pile.",
           "semantic_tag": "engage",
           "structural_tag": "terminal",
           "next_scene": "m1_gift_pile_quick"
@@ -117,7 +117,7 @@
     "m1_bathroom": {
       "context_summary": "in the small hallway bathroom",
       "narration": [
-        "The bathroom is small and quiet. You close the door behind you. You don't actually need to use it. You just stand for a moment. The noise of the party is muffled through the door.",
+        "You find the bathroom and decide to enter. The bathroom is small and quiet. You close the door behind you. You don't actually need to use it. You just stand for a moment. The noise of the party is muffled through the door.",
         "You look at yourself in the mirror. You look like a kid at a party. You look like you're fine."
       ],
       "on_enter": [
@@ -165,14 +165,13 @@
     "m1_rug_approach": {
       "context_summary": "approaching the group of kids on the rug",
       "narration": [
-        "The kids on the rug look up as you get closer. Four of them, plus the birthday boy. They're in the middle of a card game — some kind of matching thing you don't recognize. The birthday boy waves you over with a card in his hand.",
+        "The kids on the rug look up as you get closer. Four of them, plus the birthday boy. They're in the middle of a card game, some kind of matching thing you don't recognize. The birthday boy waves you over with a card in his hand.",
         "'You want to play? It's easy.' One of the other kids scoots to make room.",
         "You look at the cards laid out on the rug. You don't know how this game works."
       ],
       "on_enter": [
         { "event_type": "zone_entered", "data": { "zone_id": "rug_area", "entry_vector": null } },
-        { "event_type": "npc_interaction", "data": { "npc_id": "birthday_boy", "interaction_type": "approached", "duration_seconds": null } },
-        { "event_type": "choice_presented", "data": { "scene_id": "m1_rug_approach", "context_summary": "asked if he wants to play the card game", "available_options": [] } }
+        { "event_type": "npc_interaction", "data": { "npc_id": "birthday_boy", "interaction_type": "approached", "duration_seconds": null } }
       ],
       "choices": [
         {
@@ -194,7 +193,7 @@
         },
         {
           "option_id": "retreat",
-          "text": "Shake your head. Step back.",
+          "text": "Shake your head. 'I'll watch.'",
           "semantic_tag": "avoid",
           "structural_tag": "terminal",
           "next_scene": "m1_game_retreat",
@@ -209,7 +208,7 @@
       "context_summary": "admitted not knowing the game",
       "narration": [
         "One of the kids explains the rules to you, a little impatiently. Match the pairs. Whoever gets the most pairs by the end wins. It's not complicated. You just hadn't seen these cards before.",
-        "You play a round. You match one pair. Someone else matches three in a row. The game moves on. Nobody is mean about it. Nobody has to be. It's just clear, to you, that everyone else is somewhere you aren't."
+        "You play a round. You match one pair. Someone else matches three in a row. The game moves on. The kids around you are laughing about something while you wait for it to be your turn. 'Can't they just play the game?' It's clear, to you, that everyone else is somewhere you aren't."
       ],
       "on_enter": [
         { "event_type": "npc_interaction", "data": { "npc_id": "kid_group", "interaction_type": "dialogue_engaged", "duration_seconds": null } }
@@ -235,7 +234,7 @@
     "m1_game_bluff": {
       "context_summary": "bluffed and played the game without knowing rules",
       "narration": [
-        "You sit down. You watch what the other kids do and try to copy it, half a beat behind. It works for one round. Then it doesn't. Someone laughs — not meanly, just surprised. 'Wait, you don't know how to play?'",
+        "You sit down. You watch what the other kids do and try to copy it, half a beat behind. It works for one round. Then it doesn't. Someone laughs, not meanly, just surprised. 'Wait, you don't know how to play?'",
         "You feel your face get hot. Someone explains the rules. You play a few more rounds. You match some pairs. The game moves on."
       ],
       "on_enter": [
@@ -264,7 +263,7 @@
       "context_summary": "retreated from the game",
       "narration": [
         "You step back from the rug. The birthday boy shrugs and turns back to his cards. The other kids don't seem to notice.",
-        "You end up over by the snack table. There's another kid there — a girl you don't know — who is also standing quietly by herself. Neither of you says anything to the other. After a minute, she wanders off."
+        "You end up over by the snack table. There's another kid there, a girl you don't know, who is also standing quietly by herself. Neither of you says anything to the other. After a minute, she wanders off."
       ],
       "choices": [
         {
@@ -282,7 +281,7 @@
       "narration": [
         "The party is winding down. Some parents are starting to arrive at the door. The host parent claps her hands to get everyone's attention.",
         "'Everyone! Group picture with the birthday boy! Come on, everyone squeeze in!'",
-        "Kids start moving toward the fireplace where she's set up her camera. The birthday boy is in the middle. There's a scramble for who stands next to him. You are near the back of the room."
+        "Kids start moving toward the fireplace where she's set up her camera. The birthday boy is in the middle. There's a scramble for who stands next to him. You're shorter than most of the other kids."
       ],
       "choices": [
         {
@@ -301,7 +300,7 @@
         },
         {
           "option_id": "photo_edge",
-          "text": "Stand at the far edge. Half in the frame.",
+          "text": "Stand at the far edge, half in the frame.",
           "semantic_tag": "avoid",
           "structural_tag": "terminal",
           "next_scene": "m1_photo_taken"
@@ -310,14 +309,47 @@
     },
 
     "m1_photo_taken": {
-      "context_summary": "the photo is taken; end of memory",
+      "context_summary": "the photo is taken; kids scatter",
       "narration": [
         "The camera flashes. The photo is taken. The kids start scattering. The host parent puts the camera down and heads toward the door where more parents are arriving.",
-        "You look at your feet.",
-        "He told her it was fine."
+        "You look at your feet."
       ],
       "on_enter": [
         { "event_type": "object_examined", "data": { "object_id": "group_photo", "interaction_type": "photographed", "duration_seconds": null } }
+      ],
+      "choices": [
+        {
+          "option_id": "wait_for_mother",
+          "text": "Wait by the door until your mother arrives.",
+          "semantic_tag": "engage",
+          "structural_tag": "terminal",
+          "next_scene": "m1_mother_arrives"
+        }
+      ]
+    },
+
+    "m1_mother_arrives": {
+      "context_summary": "mother picks him up; end of memory",
+      "narration_static": [
+        "Your mother's car pulls up outside. She waves through the windshield. You gather your things and step out into the afternoon.",
+        "You climb into the back seat. She looks at you in the rearview mirror.",
+        "'So? How was it?'",
+	"You think of what you just experienced."
+      ],
+      "narration_fragments": [
+        { "if_zone_entered": "bathroom", "text": "The tiles of the bathroom floor." },
+        { "if_choice_made": "admit", "text": "The kid explaining the rules to you, a little impatiently." },
+        { "if_choice_made": "bluff", "text": "The way your face got hot when they noticed you couldn't play the game." },
+        { "if_choice_made": "retreat", "text": "The girl at the snack table who didn't say anything." },
+        { "if_choice_made": "leave_group", "text": "The moment you left the other kids." },
+        { "if_choice_made": "hover_at_edge", "text": "How long you stood by the door before anyone noticed you." },
+        { "if_choice_made": "photo_center", "text": "How close you had to stand to the birthday boy for the photo." },
+        { "if_choice_made": "photo_edge", "text": "How far you were from the camera." },
+        { "if_stillness_context": "overwhelmed", "text": "The moments where the room felt like too much." }
+      ],
+      "narration_close": [
+        "'It was fine.'",
+        "She smiles and puts the car in drive. The party house slides past the window and then it's gone."
       ],
       "terminal": true
     }

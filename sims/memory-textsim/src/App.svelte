@@ -1,5 +1,4 @@
 <script>
-  import { onMount } from 'svelte';
   import SceneView from './components/SceneView.svelte';
   import TraceDownload from './components/TraceDownload.svelte';
   import { Game } from './engine/game.js';
@@ -9,24 +8,36 @@
   let game = null;
   let tracer = null;
   let currentScene = null;
+  let currentNarration = [];
+  let awaitingContinue = false;
   let finished = false;
   let started = false;
+
+  function refreshSceneState() {
+    currentScene = game.getCurrentScene();
+    currentNarration = game.getSceneNarration();
+    awaitingContinue = game.isAwaitingContinue();
+    if (game.isFinished()) finished = true;
+  }
 
   function startNewPlaythrough() {
     tracer = new Tracer({ generation_source: 'human' });
     game = new Game(memory1Scenes.scenes, tracer);
     game.startMemory('memory_1', memory1Scenes.entry_scene);
-    currentScene = game.getCurrentScene();
     finished = false;
     started = true;
+    refreshSceneState();
   }
 
   function handleChoice(optionId) {
     game.makeChoice(optionId);
-    currentScene = game.getCurrentScene();
-    if (game.isFinished()) {
-      finished = true;
-    }
+    refreshSceneState();
+  }
+
+  function handleContinue() {
+    game.continueFromTerminal();
+    if (!game.isFinished()) refreshSceneState();
+    else finished = true;
   }
 </script>
 
@@ -43,8 +54,10 @@
     </div>
   {:else if finished}
     <TraceDownload {tracer} onRestart={startNewPlaythrough} />
+  {:else if awaitingContinue}
+    <SceneView scene={currentScene} narration={currentNarration} onContinue={handleContinue} isTerminal={true} />
   {:else}
-    <SceneView scene={currentScene} onChoice={handleChoice} />
+    <SceneView scene={currentScene} narration={currentNarration} onChoice={handleChoice} />
   {/if}
 </main>
 

@@ -61,10 +61,6 @@ export class Tracer {
       transition_type: 'end',
       trigger: 'scripted'
     });
-
-    // Derived features are computed later by the extraction pipeline,
-    // not here. This keeps the tracer thin and the feature engineering
-    // versionable independently.
   }
 
   recordEvent(eventType, data) {
@@ -82,6 +78,52 @@ export class Tracer {
     });
 
     this.eventCounter++;
+  }
+
+  // -----------------------------------------------------------------------
+  // Query methods: let the engine inspect what happened during this memory
+  // so scenes can conditionally include narration fragments.
+  // -----------------------------------------------------------------------
+
+  getEventsForMemory(memoryId) {
+    const memory = this.profile.memory_traces[memoryId || this.currentMemory];
+    return memory ? memory.events : [];
+  }
+
+  // Did the player enter this zone during the given memory (default: current)?
+  hasZoneEntered(zoneId, memoryId) {
+    return this.getEventsForMemory(memoryId).some(e =>
+      e.event_type === 'zone_entered' && e.data.zone_id === zoneId
+    );
+  }
+
+  // Did the player make this specific choice option during the given memory?
+  hasChoiceMade(optionId, memoryId) {
+    return this.getEventsForMemory(memoryId).some(e =>
+      e.event_type === 'choice_made' && e.data.selected_option_id === optionId
+    );
+  }
+
+  // Did the player make any choice with this semantic tag during the given memory?
+  hasSemanticTag(tag, memoryId) {
+    return this.getEventsForMemory(memoryId).some(e =>
+      e.event_type === 'choice_made' && e.data.semantic_tag === tag
+    );
+  }
+
+  // Total count of choices with a given semantic tag during the given memory.
+  countSemanticTag(tag, memoryId) {
+    return this.getEventsForMemory(memoryId).filter(e =>
+      e.event_type === 'choice_made' && e.data.semantic_tag === tag
+    ).length;
+  }
+
+  // Count of stillness triggers during the given memory (optionally filtered by context).
+  countStillness(context, memoryId) {
+    return this.getEventsForMemory(memoryId).filter(e =>
+      e.event_type === 'stillness_triggered' &&
+      (!context || e.data.trigger_context === context)
+    ).length;
   }
 
   export() {

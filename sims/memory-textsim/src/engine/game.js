@@ -3,12 +3,13 @@
 
 export class Game {
   constructor(scenes, tracer) {
-    this.scenes = scenes;              // { sceneId: sceneObject, ... }
-    this.tracer = tracer;              // Tracer instance
+    this.scenes = scenes;
+    this.tracer = tracer;
     this.currentSceneId = null;
     this.currentMemoryId = null;
-    this.state = {};                   // arbitrary state for scene transitions
+    this.state = {};
     this.finished = false;
+    this.awaitingContinue = false;
   }
 
   startMemory(memoryId, entrySceneId) {
@@ -22,23 +23,15 @@ export class Game {
     if (!scene) throw new Error(`Unknown scene: ${sceneId}`);
     this.currentSceneId = sceneId;
 
-    // Fire scene-level events (zone entries, stillness triggers baked into the scene)
     if (scene.on_enter) {
       for (const event of scene.on_enter) {
         this.tracer.recordEvent(event.event_type, event.data);
       }
     }
 
-    // If the scene is a terminal (memory-end) scene, close the memory
     if (scene.terminal) {
-      this.tracer.endMemory(this.currentMemoryId);
-      if (scene.next_memory) {
-        this.startMemory(scene.next_memory.memory_id, scene.next_memory.entry_scene);
-      } else {
-        this.finished = true;
-      }
+      this.awaitingContinue = true;
     } else if (scene.choices && scene.choices.length > 0) {
-      // Record that choices are being presented
       this.tracer.recordEvent('choice_presented', {
         scene_id: sceneId,
         context_summary: scene.context_summary || '',
@@ -63,22 +56,94 @@ export class Game {
       structural_tag: choice.structural_tag || null
     });
 
-    // Fire any follow-on events from the choice (e.g., stillness triggers)
     if (choice.on_select) {
       for (const event of choice.on_select) {
         this.tracer.recordEvent(event.event_type, event.data);
       }
     }
 
-    // Transition to next scene
     if (choice.next_scene) {
       this.goToScene(choice.next_scene);
+    }
+  }
+
+  continueFromTerminal() {
+    const scene = this.scenes[this.currentSceneId];
+    if (!scene.terminal || !this.awaitingContinue) return;
+    this.awaitingContinue = false;
+    this.tracer.endMemory(this.currentMemoryId);
+    if (scene.next_memory) {
+      this.startMemory(scene.next_memory.memory_id, scene.next_memory.entry_scene);
+    } else {
+      this.finished = true;
     }
   }
 
   getCurrentScene() {
     if (!this.currentSceneId) return null;
     return this.scenes[this.currentSceneId];
+  }
+
+  // -----------------------------------------------------------------------
+  // Assemble the scene's narration for rendering. If the scene uses
+  // static + fragments + close, evaluate the fragment conditions against
+  // the trace and produce a single flat array of paragraphs.
+  //
+  // Fragment condition keys supported:
+  //   if_zone_entered: "zone_id"
+  //   if_choice_made:  "option_id"
+  //   if_semantic_tag: "honest" | "deflecting" | "avoid" | ...
+  //   if_stillness_context: "overwhelmed" | "being_seen" | ...
+  //
+  // A fragment may declare multiple conditions; ALL must be true for the
+  // fragment to appear. If a fragment has no conditions, it always appears.
+  // -----------------------------------------------------------------------
+  getSceneNarration(sceneId) {
+    const scene = this.scenes[sceneId || this.currentSceneId];
+    if (!scene) return [];
+
+    // Simple case: static narration only
+    if (scene.narration && !scene.narration_fragments) {
+      return scene.narration;
+    }
+
+    // Fragment case: assemble static intro + matching fragments + static close
+    const paragraphs = [];
+    if (scene.narration_static) {
+      paragraphs.push(...scene.narration_static);
+    }
+    if (scene.narration_fragments) {
+      const matched = scene.narration_fragments
+        .filter(f => this._fragmentMatches(f))
+        .map(f => f.text);
+      if (matched.length > 0) {
+        paragraphs.push(matched.join(' '));
+      }
+    }
+    if (scene.narration_close) {
+      paragraphs.push(...scene.narration_close);
+    }
+    return paragraphs;
+  }
+
+  _fragmentMatches(fragment) {
+    if (fragment.if_zone_entered) {
+      if (!this.tracer.hasZoneEntered(fragment.if_zone_entered)) return false;
+    }
+    if (fragment.if_choice_made) {
+      if (!this.tracer.hasChoiceMade(fragment.if_choice_made)) return false;
+    }
+    if (fragment.if_semantic_tag) {
+      if (!this.tracer.hasSemanticTag(fragment.if_semantic_tag)) return false;
+    }
+    if (fragment.if_stillness_context) {
+      if (this.tracer.countStillness(fragment.if_stillness_context) === 0) return false;
+    }
+    return true;
+  }
+
+  isAwaitingContinue() {
+    return this.awaitingContinue;
   }
 
   isFinished() {
